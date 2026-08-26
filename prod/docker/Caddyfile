@@ -80,6 +80,11 @@
 	}
 
 	handle {
+		# Adds shed=true/false to /explain access logs (var set by botshed;
+		# empty elsewhere). Datadog metrics split organic vs bot on it.
+		# log_append's default directive order is before botshed's slot,
+		# which it must be: botshed short-circuits the chain when shedding.
+		log_append shed {vars.shed}
 		botshed {
 			db_path {env.DB_PATH}
 			upstream {env.UPSTREAM_ADDR}

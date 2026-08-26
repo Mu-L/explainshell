@@ -7,7 +7,7 @@
       "include_percentiles": true
     },
     "filter": {
-      "query": "source:explainshell @http.status_code:* -@request.uri:*_uptime* -@request.uri:\"/health\""
+      "query": "source:explainshell @http.status_code:* -@request.uri:*_uptime* -@request.uri:\"/health\" -@shed:true"
     },
     "group_by": [
       {

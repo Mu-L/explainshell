@@ -200,10 +200,15 @@ func (b *Botshed) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddyht
 	bn := *bnPtr
 	canned := *cannedPtr
 
+	// The shed var reaches the access log via `log_append shed {vars.shed}`
+	// in the Caddyfile; Datadog metrics split organic vs bot traffic on it.
+	// Boot-window passthroughs above leave it unset: the detector never ran.
 	shed, hits := shouldShed(cmd, bn)
 	if !shed {
+		caddyhttp.SetVar(r.Context(), "shed", false)
 		return next.ServeHTTP(w, r)
 	}
+	caddyhttp.SetVar(r.Context(), "shed", true)
 
 	idx := fnv32(cmd) % uint32(len(canned))
 	body := canned[idx]

@@ -15,6 +15,10 @@
       {
         "path": "@http.status_code",
         "tag_name": "status_code"
+      },
+      {
+        "path": "@shed",
+        "tag_name": "shed"
       }
     ]
   }

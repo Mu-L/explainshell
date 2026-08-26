@@ -27,7 +27,10 @@ program; log forwarding itself is configured in `prod/digitalocean/app.yaml`
   logs): `explainshell.requests` (by endpoint/status), `.requests_by_country`,
   and `.request.duration` (distribution of `duration_ms` with percentiles).
   The `endpoint` tag comes from the pipeline's category processor — never tag
-  metrics by unbounded values like `cmd` or raw path. `compute` is immutable
+  metrics by unbounded values like `cmd` or raw path. The `shed` field
+  (botshed's bot verdict, emitted via `log_append` in the Caddyfile) tags the
+  requests metric and is excluded from duration/country and the top-commands
+  widget, so those reflect organic traffic. `compute` is immutable
   after creation; changing it requires delete + recreate in the UI/API.
 - `dashboards/` — the "explainshell overview" dashboard (traffic, error rate,
   latency percentiles, country map, top commands, browsers/bots, probe

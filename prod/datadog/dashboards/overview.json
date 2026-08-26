@@ -137,7 +137,7 @@
               {
                 "data_source": "logs",
                 "name": "q1",
-                "search": {"query": "source:explainshell @cmd:*"},
+                "search": {"query": "source:explainshell @cmd:* -@shed:true"},
                 "indexes": ["*"],
                 "group_by": [
                   {
@@ -179,6 +179,26 @@
               }
             ],
             "formulas": [{"formula": "q1"}]
+          }
+        ]
+      }
+    },
+    {
+      "definition": {
+        "title": "/explain: bots shed vs served",
+        "type": "timeseries",
+        "requests": [
+          {
+            "response_format": "timeseries",
+            "queries": [
+              {
+                "data_source": "metrics",
+                "name": "q1",
+                "query": "sum:explainshell.requests{endpoint:explain} by {shed}.as_count()"
+              }
+            ],
+            "formulas": [{"formula": "q1"}],
+            "display_type": "bars"
           }
         ]
       }
