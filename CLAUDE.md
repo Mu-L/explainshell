@@ -139,7 +139,7 @@ python -m explainshell.manager extract --mode llm:codex/gpt-5.6-sol/medium /path
   - `roff_utils.py` - Roff source detection (dashless opts, nested cmd)
   - `manpage.py` - Man page reading and HTML conversion
   - `help_constants.py` - Shell constant definitions for help text
-  - `logger/` - Logging setup: loguru interceptor (dev, via runserver.py) and JSON stderr logging (prod under gunicorn, wired in `create_app`)
+  - `logger/` - JSON stderr logging for prod under gunicorn (wired in `create_app`); dev uses plain `logging.basicConfig` via runserver.py
   - `util.py` - Shared utilities (group_continuous, Peekable, name_section)
   - `config.py` - Configuration (DB_PATH, HOST_IP, DEBUG, MANPAGE_URLS)
   - `extraction/` - Man page option extraction pipeline

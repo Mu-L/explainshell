@@ -3,12 +3,14 @@ import os
 
 from explainshell import config
 from explainshell.web import create_app
-from explainshell.logger.logging_interceptor import InterceptHandler
 
 
 if __name__ == "__main__":
-    # activate logging and redirect all logs to loguru
-    logging.basicConfig(handlers=[InterceptHandler()], level=logging.DEBUG, force=True)
+    logging.basicConfig(
+        level=logging.DEBUG,
+        format="%(asctime)s %(levelname)-7s %(name)s: %(message)s",
+        force=True,
+    )
 
     app = create_app()
     port = int(os.environ.get("PORT", 5000))

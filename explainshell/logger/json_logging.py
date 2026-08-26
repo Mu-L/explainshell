@@ -1,8 +1,8 @@
 """JSON line logging for production.
 
-Under gunicorn the app runs with no logging configured (runserver.py, which
-sets up loguru, is the dev entrypoint only), so records fell through to
-`logging.lastResort`, which prints the bare message with no level. Datadog
+Under gunicorn the app runs with no logging configured (runserver.py's
+basicConfig is dev-only), so records fell through to `logging.lastResort`,
+which prints the bare message with no level. Datadog
 then ingested them as status=info plain text. Emitting one JSON object per
 line fixes that: Datadog auto-parses JSON messages and maps `level` to the
 log status and `message` to the message.

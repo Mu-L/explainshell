@@ -85,9 +85,9 @@ def get_distros() -> list[tuple[str, str]]:
 
 def create_app(db_path=None):
     """Application factory."""
-    # Under gunicorn nothing has configured logging (runserver.py's loguru
-    # setup is dev-only), leaving records to lastResort's bare-message
-    # stderr output. The guard keeps dev/e2e loguru setups untouched.
+    # Under gunicorn nothing has configured logging (runserver.py's
+    # basicConfig is dev-only), leaving records to lastResort's bare-message
+    # stderr output. The guard keeps the dev/e2e setup untouched.
     if not logging.getLogger().handlers:
         from explainshell.logger.json_logging import setup_json_logging
 
