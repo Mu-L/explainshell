@@ -1,0 +1,12 @@
+{
+  "id": "explainshell.parse_errors",
+  "attributes": {
+    "compute": {
+      "aggregation_type": "count"
+    },
+    "filter": {
+      "query": "source:explainshell \"parsing error\""
+    },
+    "group_by": []
+  }
+}

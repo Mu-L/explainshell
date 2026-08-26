@@ -28,6 +28,14 @@
         "query": "\"botshed: shed\"",
         "sample_rate": 1.0
       }
+    },
+    {
+      "name": "parse error warnings",
+      "is_enabled": true,
+      "filter": {
+        "query": "\"parsing error\"",
+        "sample_rate": 1.0
+      }
     }
   ]
 }
