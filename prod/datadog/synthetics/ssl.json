@@ -1,0 +1,31 @@
+{
+  "name": "explainshell.com SSL certificate",
+  "type": "api",
+  "subtype": "ssl",
+  "config": {
+    "request": {
+      "host": "explainshell.com",
+      "port": 443
+    },
+    "assertions": [
+      {
+        "operator": "isInMoreThan",
+        "type": "certificate",
+        "target": 14
+      }
+    ]
+  },
+  "locations": [
+    "aws:us-east-2"
+  ],
+  "options": {
+    "tick_every": 86400,
+    "accept_self_signed": false,
+    "monitor_name": "explainshell.com SSL certificate expires soon"
+  },
+  "message": "explainshell.com TLS certificate expires in under 14 days. @idan+alerts@explainshell.com",
+  "tags": [
+    "service:explainshell",
+    "managed_by:claude-code"
+  ]
+}

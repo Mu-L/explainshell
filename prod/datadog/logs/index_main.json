@@ -1,0 +1,25 @@
+{
+  "name": "main",
+  "filter": {
+    "query": ""
+  },
+  "num_retention_days": 15,
+  "exclusion_filters": [
+    {
+      "name": "uptime probes",
+      "is_enabled": true,
+      "filter": {
+        "query": "@request.uri:*_uptime*",
+        "sample_rate": 1.0
+      }
+    },
+    {
+      "name": "health checks",
+      "is_enabled": true,
+      "filter": {
+        "query": "@request.uri:\"/health\"",
+        "sample_rate": 1.0
+      }
+    }
+  ]
+}

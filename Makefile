@@ -42,12 +42,12 @@ tests-all: lint tests botshed-test e2e prod-integration
 tests-quick: lint tests botshed-test
 
 lint:
-	ruff check explainshell tests tools
-	ruff format --check explainshell tests tools
+	ruff check explainshell tests tools prod/datadog
+	ruff format --check explainshell tests tools prod/datadog
 	npx biome check
 
 format:
-	ruff format explainshell tests tools
+	ruff format explainshell tests tools prod/datadog
 	npx biome check --fix
 
 serve:

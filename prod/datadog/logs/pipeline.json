@@ -1,0 +1,106 @@
+{
+  "name": "explainshell caddy access logs",
+  "is_enabled": true,
+  "filter": {
+    "query": "source:explainshell"
+  },
+  "processors": [
+    {
+      "name": "parse request.uri into http.url_details",
+      "is_enabled": true,
+      "sources": [
+        "request.uri"
+      ],
+      "target": "http.url_details",
+      "normalize_ending_slashes": false,
+      "type": "url-parser"
+    },
+    {
+      "name": "decode cmd query param",
+      "is_enabled": true,
+      "source": "request.uri",
+      "samples": [
+        "/explain?cmd=tar+-xzvf+foo.tgz&marker=x",
+        "/explain?cmd=git%20log%20--oneline"
+      ],
+      "grok": {
+        "support_rules": "",
+        "match_rules": "extract_cmd %{data}[?&]cmd=%{regex(\"[^&]*\"):cmd:decodeuricomponent}(&%{data})?"
+      },
+      "type": "grok-parser"
+    },
+    {
+      "name": "status -> http.status_code",
+      "is_enabled": true,
+      "sources": [
+        "status"
+      ],
+      "source_type": "attribute",
+      "target": "http.status_code",
+      "target_type": "attribute",
+      "preserve_source": false,
+      "override_on_conflict": true,
+      "type": "attribute-remapper"
+    },
+    {
+      "name": "request.method -> http.method",
+      "is_enabled": true,
+      "sources": [
+        "request.method"
+      ],
+      "source_type": "attribute",
+      "target": "http.method",
+      "target_type": "attribute",
+      "preserve_source": false,
+      "override_on_conflict": true,
+      "type": "attribute-remapper"
+    },
+    {
+      "name": "request.client_ip -> network.client.ip",
+      "is_enabled": true,
+      "sources": [
+        "request.client_ip"
+      ],
+      "source_type": "attribute",
+      "target": "network.client.ip",
+      "target_type": "attribute",
+      "preserve_source": true,
+      "override_on_conflict": true,
+      "type": "attribute-remapper"
+    },
+    {
+      "name": "flatten UA header array",
+      "is_enabled": true,
+      "template": "%{request.headers.User-Agent}",
+      "target": "http.useragent",
+      "is_replace_missing": false,
+      "type": "string-builder-processor"
+    },
+    {
+      "name": "parse User-Agent",
+      "is_enabled": true,
+      "sources": [
+        "http.useragent"
+      ],
+      "target": "http.useragent_details",
+      "is_encoded": false,
+      "type": "user-agent-parser"
+    },
+    {
+      "name": "flatten Cf-Ipcountry header array",
+      "is_enabled": true,
+      "template": "%{request.headers.Cf-Ipcountry}",
+      "target": "country",
+      "is_replace_missing": false,
+      "type": "string-builder-processor"
+    },
+    {
+      "name": "duration seconds -> duration_ms",
+      "is_enabled": true,
+      "expression": "duration * 1000",
+      "target": "duration_ms",
+      "is_replace_missing": false,
+      "type": "arithmetic-processor"
+    }
+  ]
+}
