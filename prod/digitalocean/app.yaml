@@ -9,9 +9,10 @@ services:
     dockerfile_path: prod/docker/Dockerfile
     source_dir: /
     log_destinations:
-      - name: betterstack
-        logtail:
-          token: ${LOGTAIL_TOKEN}
+      - name: datadog
+        datadog:
+          endpoint: https://http-intake.logs.datadoghq.com/api/v2/logs
+          api_key: ${DATADOG_API_KEY}
     github:
       repo: idank/explainshell
       branch: master

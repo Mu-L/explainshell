@@ -95,6 +95,7 @@ upload-live-db:
 # for the one-time setup).
 deploy-local:
 	@test -n "$$DO_APP_ID" || { echo "DO_APP_ID is not set"; exit 1; }
+	@test -n "$$DATADOG_API_KEY" || { echo "DATADOG_API_KEY is not set (envsubst would blank the log destination token)"; exit 1; }
 	@printf "Deploy to production from LOCAL? [y/N] "; \
 	read ans; [ "$$ans" = "y" ] || [ "$$ans" = "Y" ] || { echo "aborted"; exit 1; }
 	@if [ -n "$$(git status --porcelain)" ]; then \
