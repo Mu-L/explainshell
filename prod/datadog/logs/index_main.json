@@ -20,6 +20,14 @@
         "query": "@request.uri:\"/health\"",
         "sample_rate": 1.0
       }
+    },
+    {
+      "name": "botshed shed diagnostics",
+      "is_enabled": true,
+      "filter": {
+        "query": "\"botshed: shed\"",
+        "sample_rate": 1.0
+      }
     }
   ]
 }
