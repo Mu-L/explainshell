@@ -16,6 +16,44 @@
       "type": "url-parser"
     },
     {
+      "type": "category-processor",
+      "name": "endpoint category",
+      "is_enabled": true,
+      "target": "endpoint",
+      "categories": [
+        {
+          "name": "explain",
+          "filter": {
+            "query": "@http.url_details.path:\"/explain\""
+          }
+        },
+        {
+          "name": "home",
+          "filter": {
+            "query": "@http.url_details.path:\"/\""
+          }
+        },
+        {
+          "name": "health",
+          "filter": {
+            "query": "@http.url_details.path:\"/health\""
+          }
+        },
+        {
+          "name": "static",
+          "filter": {
+            "query": "@http.url_details.path:/static/*"
+          }
+        },
+        {
+          "name": "other",
+          "filter": {
+            "query": "@http.url_details.path:*"
+          }
+        }
+      ]
+    },
+    {
       "name": "decode cmd query param",
       "is_enabled": true,
       "source": "request.uri",

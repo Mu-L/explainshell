@@ -1,0 +1,207 @@
+{
+  "title": "explainshell overview",
+  "description": "Traffic, errors, latency, and uptime for explainshell.com. Built on log-based metrics (explainshell.requests*, explainshell.request.duration) and the access-log facets; managed in prod/datadog/.",
+  "layout_type": "ordered",
+  "reflow_type": "auto",
+  "widgets": [
+    {
+      "definition": {
+        "title": "Requests by status",
+        "type": "timeseries",
+        "requests": [
+          {
+            "response_format": "timeseries",
+            "queries": [
+              {
+                "data_source": "metrics",
+                "name": "q1",
+                "query": "sum:explainshell.requests{*} by {status_code}.as_count()"
+              }
+            ],
+            "formulas": [{"formula": "q1"}],
+            "display_type": "bars"
+          }
+        ]
+      }
+    },
+    {
+      "definition": {
+        "title": "Requests by endpoint",
+        "type": "timeseries",
+        "requests": [
+          {
+            "response_format": "timeseries",
+            "queries": [
+              {
+                "data_source": "metrics",
+                "name": "q1",
+                "query": "sum:explainshell.requests{*} by {endpoint}.as_count()"
+              }
+            ],
+            "formulas": [{"formula": "q1"}],
+            "display_type": "area"
+          }
+        ]
+      }
+    },
+    {
+      "definition": {
+        "title": "Error rate % (5xx, 1h)",
+        "type": "query_value",
+        "time": {"live_span": "1h"},
+        "precision": 2,
+        "requests": [
+          {
+            "response_format": "scalar",
+            "queries": [
+              {
+                "data_source": "metrics",
+                "name": "errors",
+                "query": "sum:explainshell.requests{status_code:5*}.as_count()",
+                "aggregator": "sum"
+              },
+              {
+                "data_source": "metrics",
+                "name": "total",
+                "query": "sum:explainshell.requests{*}.as_count()",
+                "aggregator": "sum"
+              }
+            ],
+            "formulas": [{"formula": "(errors / total) * 100"}]
+          }
+        ]
+      }
+    },
+    {
+      "definition": {
+        "title": "/explain latency (ms)",
+        "type": "timeseries",
+        "requests": [
+          {
+            "response_format": "timeseries",
+            "queries": [
+              {
+                "data_source": "metrics",
+                "name": "p50",
+                "query": "p50:explainshell.request.duration{endpoint:explain}"
+              },
+              {
+                "data_source": "metrics",
+                "name": "p95",
+                "query": "p95:explainshell.request.duration{endpoint:explain}"
+              },
+              {
+                "data_source": "metrics",
+                "name": "p99",
+                "query": "p99:explainshell.request.duration{endpoint:explain}"
+              }
+            ],
+            "formulas": [{"formula": "p50"}, {"formula": "p95"}, {"formula": "p99"}],
+            "display_type": "line"
+          }
+        ]
+      }
+    },
+    {
+      "definition": {
+        "title": "Requests by country (1d)",
+        "type": "geomap",
+        "time": {"live_span": "1d"},
+        "requests": [
+          {
+            "response_format": "scalar",
+            "queries": [
+              {
+                "data_source": "metrics",
+                "name": "q1",
+                "query": "sum:explainshell.requests_by_country{*} by {country}.as_count()",
+                "aggregator": "sum"
+              }
+            ],
+            "formulas": [{"formula": "q1"}]
+          }
+        ],
+        "style": {"palette": "hostmap_blues", "palette_flip": false},
+        "view": {"focus": "WORLD"}
+      }
+    },
+    {
+      "definition": {
+        "title": "Top commands (1d)",
+        "type": "toplist",
+        "time": {"live_span": "1d"},
+        "requests": [
+          {
+            "response_format": "scalar",
+            "queries": [
+              {
+                "data_source": "logs",
+                "name": "q1",
+                "search": {"query": "source:explainshell @cmd:*"},
+                "indexes": ["*"],
+                "group_by": [
+                  {
+                    "facet": "@cmd",
+                    "limit": 15,
+                    "sort": {"aggregation": "count", "order": "desc"}
+                  }
+                ],
+                "compute": {"aggregation": "count"}
+              }
+            ],
+            "formulas": [{"formula": "q1"}]
+          }
+        ]
+      }
+    },
+    {
+      "definition": {
+        "title": "Browsers / bots (1d)",
+        "type": "toplist",
+        "time": {"live_span": "1d"},
+        "requests": [
+          {
+            "response_format": "scalar",
+            "queries": [
+              {
+                "data_source": "logs",
+                "name": "q1",
+                "search": {"query": "source:explainshell @http.useragent_details.browser.family:*"},
+                "indexes": ["*"],
+                "group_by": [
+                  {
+                    "facet": "@http.useragent_details.browser.family",
+                    "limit": 15,
+                    "sort": {"aggregation": "count", "order": "desc"}
+                  }
+                ],
+                "compute": {"aggregation": "count"}
+              }
+            ],
+            "formulas": [{"formula": "q1"}]
+          }
+        ]
+      }
+    },
+    {
+      "definition": {
+        "title": "Uptime probe response time (homepage)",
+        "type": "timeseries",
+        "requests": [
+          {
+            "response_format": "timeseries",
+            "queries": [
+              {
+                "data_source": "metrics",
+                "name": "q1",
+                "query": "avg:synthetics.http.response.time{check_id:gnr-p8v-jkz} by {region}"
+              }
+            ],
+            "formulas": [{"formula": "q1"}],
+            "display_type": "line"
+          }
+        ]
+      }
+    }
+  ]
+}

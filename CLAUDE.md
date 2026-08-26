@@ -223,7 +223,7 @@ The app is deployed to [DigitalOcean App Platform](https://www.digitalocean.com/
 - **Domain:** `explainshell.com` → Cloudflare (orange cloud proxy) → DigitalOcean App Platform
 - **Cloudflare:** DNS + proxy, SSL mode set to **Full (Strict)**
 - **Logs:** forwarded to Datadog (US1) via the App Platform `log_destinations` block in the app spec; the API key is the `DATADOG_API_KEY` secret in CI (and env var for `make deploy-local`)
-- **Datadog config:** `prod/datadog/` — Synthetics uptime checks, monitors, log pipeline, and index settings as checked-in JSON; `python prod/datadog/apply.py diff|apply` syncs the live account (see its README; facets/saved views are UI-only)
+- **Datadog config:** `prod/datadog/` — Synthetics uptime checks, monitors, log pipeline, index settings, log-based metrics, and dashboards as checked-in JSON; `python prod/datadog/apply.py diff|apply` syncs the live account (see its README; facets/saved views are UI-only)
 - **App spec:** `prod/digitalocean/app.yaml` — region, instance size/count, env vars, custom domain. `doctl apps update --spec` does a full replace, so anything configured out-of-band gets wiped on the next deploy; check it in here instead.
 - **Container artifacts:** `prod/docker/` (Dockerfile, Caddyfile, start.sh)
 

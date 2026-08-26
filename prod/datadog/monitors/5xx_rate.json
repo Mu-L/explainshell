@@ -1,0 +1,18 @@
+{
+  "name": "explainshell 5xx error rate",
+  "type": "query alert",
+  "query": "sum(last_5m):(sum:explainshell.requests{status_code:5*}.as_count() / clamp_min(sum:explainshell.requests{*}.as_count(), 200)) * 100 > 5",
+  "message": "explainshell.com 5xx error rate is above 5% (denominator floored at 200 req/5min, so at low traffic this needs 10+ errors to fire). @idan+alerts@explainshell.com",
+  "tags": [
+    "service:explainshell",
+    "managed_by:claude-code"
+  ],
+  "options": {
+    "thresholds": {
+      "critical": 5.0
+    },
+    "notify_no_data": false,
+    "renotify_interval": 0,
+    "include_tags": true
+  }
+}

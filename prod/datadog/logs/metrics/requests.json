@@ -1,0 +1,21 @@
+{
+  "id": "explainshell.requests",
+  "attributes": {
+    "compute": {
+      "aggregation_type": "count"
+    },
+    "filter": {
+      "query": "source:explainshell @http.status_code:* -@request.uri:*_uptime* -@request.uri:\"/health\""
+    },
+    "group_by": [
+      {
+        "path": "@endpoint",
+        "tag_name": "endpoint"
+      },
+      {
+        "path": "@http.status_code",
+        "tag_name": "status_code"
+      }
+    ]
+  }
+}

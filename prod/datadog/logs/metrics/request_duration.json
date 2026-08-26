@@ -1,0 +1,19 @@
+{
+  "id": "explainshell.request.duration",
+  "attributes": {
+    "compute": {
+      "aggregation_type": "distribution",
+      "path": "@duration_ms",
+      "include_percentiles": true
+    },
+    "filter": {
+      "query": "source:explainshell @http.status_code:* -@request.uri:*_uptime* -@request.uri:\"/health\""
+    },
+    "group_by": [
+      {
+        "path": "@endpoint",
+        "tag_name": "endpoint"
+      }
+    ]
+  }
+}

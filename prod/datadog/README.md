@@ -13,13 +13,25 @@ program; log forwarding itself is configured in `prod/digitalocean/app.yaml`
   probe traffic in logs, busts caches) and the `X-First-Party` header, which
   matches the Cloudflare "trusted internal probes" skip rule so probes bypass
   WAF/rate limiting/bot checks.
-- `monitors/` — log-based alerts (5xx spike).
+- `monitors/` — metric-based alerts (5xx error rate; the denominator is
+  floored at 200 req/5min so low-traffic blips can't fake a spike). Note
+  Datadog cannot change a monitor's `type` in place — replacing a monitor
+  means a new file/name, apply, then manual deletion of the old one.
 - `logs/pipeline.json` — processing pipeline for the Caddy JSON access logs:
   URL parsing, standard-attribute remapping, User-Agent parsing (headers are
   flattened first — Caddy logs them as arrays), `country` from
   `Cf-Ipcountry`, URL-decoded `cmd`, `duration_ms`.
 - `logs/index_main.json` — retention and exclusion filters (Synthetics
   probes, DO `/health` checks are ingested but not indexed).
+- `logs/metrics/` — log-based metrics (15-month retention vs 15 days of
+  logs): `explainshell.requests` (by endpoint/status), `.requests_by_country`,
+  and `.request.duration` (distribution of `duration_ms` with percentiles).
+  The `endpoint` tag comes from the pipeline's category processor — never tag
+  metrics by unbounded values like `cmd` or raw path. `compute` is immutable
+  after creation; changing it requires delete + recreate in the UI/API.
+- `dashboards/` — the "explainshell overview" dashboard (traffic, error rate,
+  latency percentiles, country map, top commands, browsers/bots, probe
+  response time).
 
 ## Usage
 
